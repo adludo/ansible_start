@@ -56,6 +56,7 @@ ansible-playbook ec2-creation-playbook-test.yaml --tags create_ec2 --vault-passw
 
 sudo ansible-vault edit group_vars/all/pass.yml --vault-password-file vault.pass
 
+ansible-playbook ec2-module-testing.yaml --vault-password-file vault.pass
 
 aws ec2 describe-images --region us-west-2 --image-ids ami-09975e5a942d87be0
 
@@ -89,3 +90,5 @@ ssh-keygen -f my_aws.pub -m 'PEM' -e > my_aws.pub.pem
 ssh -i ~/.ssh/my_aws.pub.pem ec2-user@ec2-3-25-130-108.ap-southeast-2.compute.amazonaws.com -vvv
 
 chmod 400 my_aws
+
+ssh -i "my_aws" ec2-user@ec2-52-65-63-49.ap-southeast-2.compute.amazonaws.com

@@ -13,7 +13,7 @@
     sec_group: "{{ id }}-sec"
     instance_type: t2.nano
     vpc_id: vpc-0444af33191bb475c
-    sec_group_id: sg-03f5085aab91c438e
+    sec_group_id: sg-0a0c566c656d6f084
 
   tasks:
     - name: Facts
@@ -43,21 +43,21 @@
           aws_access_key: "{{ec2_access_key}}"
           aws_secret_key: "{{ec2_secret_key}}"
 
-      # - name: Create security group
-      #   amazon.aws.ec2_security_group:
-      #     name: "{{ sec_group }}"
-      #     description: "Sec group for app {{ id }}"
-      #     vpc_id: "{{ vpc_id }}"
-      #     region: "{{ region }}"
-      #     aws_access_key: "{{ ec2_access_key }}"
-      #     aws_secret_key: "{{ ec2_secret_key }}"
-      #     rules:
-      #       - proto: tcp
-      #         ports:
-      #           - 22
-      #         cidr_ip: 0.0.0.0/0
-      #         rule_desc: allow all on ssh port
-      #   register: result_sec_group
+      - name: Create security group
+        amazon.aws.ec2_security_group:
+          name: "{{ sec_group }}"
+          description: "Sec group for app {{ id }}"
+          vpc_id: "{{ vpc_id }}"
+          region: "{{ region }}"
+          aws_access_key: "{{ ec2_access_key }}"
+          aws_secret_key: "{{ ec2_secret_key }}"
+          rules:
+            - proto: tcp
+              ports:
+                - 22
+              cidr_ip: 0.0.0.0/0
+              rule_desc: allow all on ssh port
+        register: result_sec_group
 
       - name: Provision instance(s)
         amazon.aws.ec2_instance:
@@ -66,7 +66,7 @@
           key_name: "{{ key_name }}"
           name: "{{ id }}"
           # id: "{{ id }}"
-          # group_id: "{{ result_sec_group.group_id }}"
+          group_id: "{{ result_sec_group.group_id }}"
           image_id: "{{ image }}"
           instance_type: "{{ instance_type }}"
           region: "{{ region }}"
